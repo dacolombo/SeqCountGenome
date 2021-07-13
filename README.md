@@ -14,6 +14,10 @@ library(SeqCountGenome)
 
 ## Usage
 For information about how to use the function contained in this package, refer to the manual in this github repository: `SeqCountGenome-manual.pdf`.
+Otherwhise, after installing the package consult the vignette using this command in an R session:
+```r
+utils::browseVignettes("SeqCountGenome")
+```
 
 ## Dependencies
 This package main dependencies are the following Bioconductor packages: `BSgenome`, `Biostrings`, `GenomeInfoDb` and `GenomicRanges`
