@@ -19,6 +19,8 @@
 
 # RStudio files
 .Rproj.user/
+.Rproj.user/
+*.Rproj
 
 # produced vignettes
 vignettes/*.html
@@ -37,6 +39,11 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+
+# Additional folders and files
+inst/doc
+/doc/
+/Meta/
 
 # Bioconductor unacceptable files
 .renviron
@@ -69,11 +76,3 @@ vignettes/*.pdf
 .seed
 .settings
 .tm_properties
-
-
-
-
-
-
-
-
