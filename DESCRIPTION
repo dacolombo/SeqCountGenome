@@ -1,0 +1,23 @@
+Package: SeqCountGenome
+Title: Counting sequences occurrences in arbitrary subsets of the genome
+Depends: R(>= 4.0.0), BSgenome, methods
+Imports: Biostrings, GenomeInfoDb, GenomicRanges
+Suggests: BSgenome.Hsapiens.UCSC.hg38, TxDb.Hsapiens.UCSC.hg38.knownGene, GenomicFeatures,
+          knitr, rmarkdown, BiocStyle, testthat
+Version: 0.99.0
+biocViews: SequenceMatching, BiomedicalInformatics, Genetics
+Authors@R: 
+    person(given = "Daniele",
+           family = "Colombo",
+           role = c("aut", "cre"),
+           email = "daniele20.colombo@mail.polimi.it")
+Description: This package provides a function to count the occurrences of a set of search sequences
+             in specific regions of the genome. The occurences are found through exact matching
+             and reported in a count matrix.
+License: GPL-2
+Encoding: UTF-8
+URL: https://github.com/dacolombo/SeqCountGenome
+BugReports: https://github.com/dacolombo/SeqCountGenome/issues
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+VignetteBuilder: knitr

@@ -1,0 +1,114 @@
+---
+title: "The SeqCountGenome Package"
+author: "Daniele Colombo"
+package: "SeqCountGenome"
+output: BiocStyle::html_document
+vignette: >
+    %\VignetteIndexEntry{The SeqCountGenome Package}
+    %\VignetteEngine{knitr::rmarkdown}
+    %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+    collapse = TRUE,
+    comment = "#>"
+)
+```
+
+
+# Introduction
+SeqCountGenome is a package to count exact matches of a search sequence in a
+set of genomic regions of interest. It is composed of one function which
+performs the counting and it's based on the `vcountPattern` function of the
+`r Biocpkg("Biostrings")` package. This package is useful to find patterns of
+interest inside of specific genomic regions, e.g. sequences that are bound by
+transcription factors in promoter regions, sequences bound by miRNAs in the
+3'-UTR of coding genes or sequences bound by snRNPs in exon-intron junctions.
+
+This package is aimed to be compliant with the requirements of Bioconductor,
+but can be installed via the function `install_github` of the 
+`r CRANpkg("devtools")` package:
+
+```{r, eval=FALSE}
+if (!require("devtools")) {install.packages("devtools")}
+devtools::install_github("dacolombo/SeqCountGenome")
+```
+
+Once installed, the package can be loaded with:
+```{r, message=FALSE}
+library(SeqCountGenome)
+```
+
+# SeqCountGenome
+This is the function contained in the package and performs the counting.
+It takes as input:
+* A **reference genome**: the genome is expected to be a BSgenome object.
+* The **genomic regions** of interest: the regions are expected to be a
+GRanges object.
+* The **search sequences**, or patterns: the patterns are expected to be a
+character vector exclusively composed by letters that are in the DNA IUPAC
+Extended Genetic Alphabet.
+
+Given these arguments, the function returns a matrix, that is structured in the
+following way:
+* The rows correspond to the genomic regions
+* The columns correspond to the search sequences
+Each value inside the resulting matrix represents the number of exact matches
+of the sequence to the region defined by its column and row respectively.
+
+As stated in the introduction, a possible application of this function is to
+find sequences bound by transcription factors in the promoters of coding genes.
+This example is shown in the following code, where the objects passed to the
+function are:
+- The hg38 human genome as reference genome, loaded through the
+`r Biocpkg("BSgenome.Hsapiens.UCSC.hg38")` package.
+- Promoters of coding genes as genomic regions, loaded through the
+`r Biocpkg("TxDb.Hsapiens.UCSC.hg38.knownGene")` package and modified in order
+to consider promoters annotated in canonical chromosomes.
+- Consensus sequences bound by NF-1, c-Myc and SP-1, which are three
+transcription factors.
+
+```{r, echo=FALSE, message=FALSE}
+library(BSgenome.Hsapiens.UCSC.hg38)
+library(TxDb.Hsapiens.UCSC.hg38.knownGene)
+library(BSgenome)
+```
+
+```{r, warning=FALSE}
+# hg38 genome:
+Hsapiens <- BSgenome.Hsapiens.UCSC.hg38
+
+# Promoters regions:
+txdb <- TxDb.Hsapiens.UCSC.hg38.knownGene
+promoters <- promoters(txdb, upstream=2000, downstream=200)
+promoters <- promoters[grep("_",seqnames(promoters),invert=TRUE)]
+
+# Consensus sequences
+NF1_consensus <- "GTCAAGGTCA"
+cMyc_consensus <- "CACGTG"
+SP1_consensus <- "GGGCGG"
+transcription_consensus <- c(NF1_consensus, cMyc_consensus, SP1_consensus)
+```
+
+Since `promoters` is a GRanges object containing approximately 200.000 regions,
+the option `overall.count` of the function `SeqCountGenome` is set to `TRUE`.
+In this way, the information regarding what region is matched is lost, but the
+output is more easily readable and better serves the scope of this vignette:
+
+```{r}
+SeqCountGenome(Hsapiens,promoters,transcription_consensus,overall.count=TRUE)
+```
+
+To observe more in depth the output of the function for this example, the
+`overall.count` argument can be left as default:
+```{r, eval=FALSE}
+SeqCountGenome(Hsapiens,promoters,transcription_consensus)
+```
+
+
+# Session Information
+The output of this vignette was produced under the following conditions:
+```{r}
+sessionInfo()
+```
